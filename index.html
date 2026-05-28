@@ -1,0 +1,1105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Shadow Trainer — DevOps/SRE Interview Coach</title>
+<style>
+  :root{
+    --bg:#0d1117; --panel:#161b22; --panel2:#1c232c; --ink:#e6edf3; --mute:#8b949e;
+    --line:#222a33; --accent:#58a6ff; --ok:#3fb950; --warn:#d29922; --bad:#f85149;
+    --caps:#ffd36e; --underline:#9be4ff; --elong:#c8a8ff; --drop:#7d8590; --pause:#f85149; --slow:#79c0ff;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:14px}
+  .app{display:grid;grid-template-columns:260px 1fr;height:100vh;overflow:hidden}
+  .side{background:#0a0d12;border-right:1px solid var(--line);padding:14px;overflow:auto}
+  .main{padding:18px 24px;overflow:auto}
+  h1{font-size:18px;margin:0 0 2px}
+  h2{font-size:16px;margin:0 0 6px}
+  h3{font-size:13px;margin:0 0 6px;color:var(--mute);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+  .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .grow{flex:1}
+  button{background:#21262d;color:var(--ink);border:1px solid #30363d;padding:7px 12px;border-radius:6px;cursor:pointer;font-size:13px;font-family:inherit}
+  button:hover{background:#2c333c}
+  button.primary{background:var(--accent);color:#0a0d12;border-color:var(--accent);font-weight:600}
+  button.primary:hover{background:#79b8ff}
+  button.danger{background:#3a1414;color:#ff7b72;border-color:#5a1a1a}
+  button.ghost{background:transparent}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:12px}
+  .qitem{padding:8px 10px;border-radius:6px;cursor:pointer;margin-bottom:4px;border:1px solid transparent;font-size:13px}
+  .qitem:hover{background:#161b22}
+  .qitem.active{background:#1f2733;border-color:#30363d}
+  .qitem .topic{font-size:10px;color:var(--mute);text-transform:uppercase;letter-spacing:.5px}
+  .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;background:#222a33;color:var(--mute);margin-right:4px}
+  .pill.ok{background:#0e2a17;color:var(--ok)}
+  .pill.warn{background:#2a1d04;color:var(--warn)}
+  .pill.bad{background:#3a1414;color:var(--bad)}
+  .question{font-size:16px;line-height:1.5;margin-bottom:10px}
+  .question .qlabel{color:var(--mute);font-size:11px;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
+  .marked{font-size:16px;line-height:1.85;background:#0a0d12;border:1px solid var(--line);border-radius:6px;padding:14px;white-space:pre-wrap;font-family:Georgia,serif}
+  .marked .caps{color:var(--caps);font-weight:700;letter-spacing:.5px}
+  .marked .underline{color:var(--underline);text-decoration:underline;text-underline-offset:3px}
+  .marked .elong{color:var(--elong);font-style:italic;letter-spacing:1.5px}
+  .marked .drop{color:var(--drop);font-style:italic;opacity:.85}
+  .marked .pause-short{color:var(--pause);opacity:.55;padding:0 2px}
+  .marked .pause-long{color:var(--pause);font-weight:700;padding:0 4px}
+  .marked .slow{color:var(--slow);background:#0d2030;padding:0 4px;border-radius:3px}
+  .marked .up{color:var(--ok);font-weight:700;padding:0 2px}
+  .marked .down{color:var(--mute);font-weight:700;padding:0 2px}
+  .marked .lstress{color:#b1bac4;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px}
+  .drill{background:#0a0d12;border:1px solid var(--line);border-radius:8px;padding:12px;margin-top:10px}
+  .drill h4{margin:0 0 6px;font-size:12px;color:var(--mute);text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+  .drill ol{margin:0 0 0 18px;padding:0;line-height:1.6}
+  .drill li{margin-bottom:4px}
+  .drill .power{font-size:15px;font-weight:600;color:var(--ok);font-style:italic;padding:8px 10px;border-left:3px solid var(--ok);background:#0e1a13;border-radius:0 6px 6px 0}
+  .drill .pause-map{font-size:13px;color:#c9d1d9;line-height:1.6;white-space:pre-wrap}
+  .drill-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+  @media(max-width:900px){.drill-row{grid-template-columns:1fr}}
+  .welcome h2{font-size:22px;margin-bottom:6px}
+  .welcome .tagline{color:var(--mute);font-size:14px;margin-bottom:14px;line-height:1.5}
+  .welcome .step{padding:10px 12px;background:#0a0d12;border:1px solid var(--line);border-radius:8px;margin-bottom:10px}
+  .welcome .step .stepnum{display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#0a0d12;font-weight:700;font-size:12px;text-align:center;line-height:22px;margin-right:8px}
+  .welcome a{color:var(--accent);text-decoration:none}
+  .welcome a:hover{text-decoration:underline}
+  .welcome label{display:block;font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.5px;margin:8px 0 4px}
+  .welcome input{width:100%;background:#0a0d12;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:8px;font-family:inherit;font-size:13px}
+  .welcome .feat{display:flex;gap:6px;font-size:12px;color:var(--mute);margin:2px 0}
+  .welcome .feat .check{color:var(--ok)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--mute);margin-top:6px}
+  .legend span{padding:2px 6px;border-radius:4px;background:#0a0d12;border:1px solid var(--line)}
+  .legend .caps{color:var(--caps)} .legend .underline{color:var(--underline);text-decoration:underline} .legend .elong{color:var(--elong);font-style:italic}
+  .legend .drop{color:var(--drop)} .legend .pause-long{color:var(--pause);font-weight:700} .legend .slow{color:var(--slow)} .legend .up{color:var(--ok)}
+  audio{width:100%;margin-top:8px}
+  canvas{width:100%;height:200px;background:#0a0d12;border-radius:6px;display:block;border:1px solid var(--line)}
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px}
+  .metric{background:#0a0d12;border:1px solid var(--line);border-radius:8px;padding:10px}
+  .metric .k{font-size:10px;color:var(--mute);text-transform:uppercase;letter-spacing:.5px}
+  .metric .v{font-size:22px;font-weight:600;margin-top:2px;font-variant-numeric:tabular-nums}
+  .metric .t{font-size:10px;color:var(--mute);margin-top:2px}
+  .v.ok{color:var(--ok)} .v.warn{color:var(--warn)} .v.bad{color:var(--bad)}
+  .verdict{padding:12px;border-radius:8px;margin-top:12px;border:1px solid var(--line);background:#0a0d12}
+  .verdict.pass{border-color:#1e4d2e;background:#0e1a13}
+  .verdict.warn{border-color:#4d3a1e;background:#1a1610}
+  .verdict.fail{border-color:#4d1e1e;background:#1a1010}
+  .verdict h4{margin:0 0 6px;font-size:14px}
+  .verdict ul{margin:6px 0 0 18px;padding:0}
+  .verdict li{margin-bottom:4px;line-height:1.5}
+  .history{display:flex;gap:4px;margin-top:10px;flex-wrap:wrap}
+  .hdot{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;cursor:pointer;color:#0a0d12}
+  .hdot.pass{background:var(--ok)} .hdot.warn{background:var(--warn)} .hdot.fail{background:var(--bad)}
+  .hdot:hover{outline:2px solid #fff}
+  .progress{margin-top:8px;font-size:12px;color:var(--mute)}
+  .progress.done{color:var(--ok);font-weight:600}
+  .transcript{font-size:13px;line-height:1.6;color:#c9d1d9;max-height:120px;overflow:auto;background:#0a0d12;padding:10px;border-radius:6px;border:1px solid var(--line);margin-top:8px;font-family:Georgia,serif}
+  .interim{color:var(--mute);font-style:italic}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:50}
+  .modal.show{display:flex}
+  .modal .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px;width:480px;max-width:92vw}
+  .modal label{display:block;font-size:12px;color:var(--mute);margin-top:10px;margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+  .modal input,.modal select,.modal textarea{width:100%;background:#0a0d12;color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:8px;font-family:inherit;font-size:13px}
+  .modal .actions{margin-top:16px;display:flex;gap:8px;justify-content:flex-end}
+  .small{font-size:11px;color:var(--mute)}
+  .tip{font-size:12px;color:var(--mute);background:#0a0d12;border-left:3px solid var(--accent);padding:8px 10px;border-radius:0 6px 6px 0;margin-top:8px}
+  .err{color:var(--bad);font-size:12px;margin-top:6px}
+  .keys{display:inline-block;padding:1px 6px;background:#0a0d12;border:1px solid var(--line);border-radius:4px;font-family:monospace;font-size:11px}
+  .kbd{display:flex;gap:6px;font-size:11px;color:var(--mute);margin-top:6px;flex-wrap:wrap}
+  .deepcoach{margin-top:10px;padding:10px;background:#0a0d12;border:1px solid #30363d;border-radius:6px;font-size:13px;line-height:1.6;white-space:pre-wrap}
+  .spinner{display:inline-block;width:12px;height:12px;border:2px solid #30363d;border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <h1>Shadow Trainer</h1>
+    <div class="small">DevOps/SRE delivery coach</div>
+    <div class="row" style="margin:10px 0 12px">
+      <button class="primary" onclick="openAsk()" style="width:100%">＋ Ask AI</button>
+    </div>
+    <div class="row" style="margin:0 0 12px">
+      <button class="ghost" onclick="openSettings()" title="Settings">⚙</button>
+      <button class="ghost" onclick="showWelcome()" title="Help / first-run guide">ⓘ</button>
+      <button class="ghost" onclick="importJSON()" title="Import questions JSON">⤓</button>
+      <button class="ghost" onclick="exportJSON()" title="Export questions JSON">⤒</button>
+    </div>
+    <h3>Questions</h3>
+    <div id="qList"></div>
+    <div style="margin-top:14px" class="small">
+      Tip: tell Claude in chat to add a question. He writes <span class="keys">questions.json</span> — click ＋ Import JSON to load.
+    </div>
+  </aside>
+
+  <main class="main">
+    <div id="emptyState" class="panel" style="display:none">
+      <h2>Pick a question on the left to begin</h2>
+      <p class="small">Or click ＋ Import JSON to load a fresh question file from Claude.</p>
+    </div>
+
+    <div id="practiceView" style="display:none">
+      <div class="panel">
+        <div class="row" style="margin-bottom:8px">
+          <button class="ghost" onclick="deleteCurrent()" id="delBtn" title="Delete this question">🗑 Delete</button>
+        </div>
+        <div class="question">
+          <span class="qlabel">Interview question · <span id="qTopic"></span></span>
+          <div id="qText"></div>
+        </div>
+        <h3>Model answer (study the markup, then shadow the audio)</h3>
+        <div class="marked" id="markedAnswer"></div>
+        <div class="legend">
+          <span class="caps">CAPS = heavy stress</span>
+          <span class="underline">underline = stress</span>
+          <span class="up">↑ pitch up</span>
+          <span class="elong">~elongate~</span>
+          <span class="drop">(drop = intimate)</span>
+          <span class="pause-long">// long pause</span>
+          <span class="slow">&lt;&lt; slow &gt;&gt;</span>
+        </div>
+        <div class="row" style="margin-top:12px">
+          <button class="primary" id="genBtn" onclick="generateReference()">🎙 Generate / play reference</button>
+          <button onclick="regenAudio()">↻ Regenerate</button>
+          <span class="small" id="audioStatus"></span>
+        </div>
+        <audio id="refAudio" controls style="display:none"></audio>
+        <div id="drillSection" style="display:none">
+          <div class="drill-row">
+            <div class="drill">
+              <h4>🔁 Repeat after me (drill these 3 lines)</h4>
+              <ol id="drRepeat"></ol>
+            </div>
+            <div class="drill">
+              <h4>🎚️ Tone guide</h4>
+              <ol id="drTone"></ol>
+            </div>
+          </div>
+          <div class="drill" style="margin-top:10px">
+            <h4>⏱️ Pause map</h4>
+            <div class="pause-map" id="drPause"></div>
+          </div>
+          <div class="drill" style="margin-top:10px">
+            <h4>💪 Power phrase</h4>
+            <div class="power" id="drPower"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Your practice attempt</h3>
+        <div class="row">
+          <button class="primary" id="recBtn" onclick="startRec()">● Record</button>
+          <button id="stopBtn" onclick="stopRec()" disabled>■ Stop</button>
+          <button id="playMineBtn" onclick="playMine()" disabled>▶ Play mine</button>
+          <button id="nextBtn" class="ghost" onclick="resetForNext()" disabled>Next attempt →</button>
+          <span class="pill" id="recState">idle</span>
+          <span class="pill" id="recTimer">0.0s</span>
+        </div>
+        <div class="kbd"><span>⌨ <span class="keys">Space</span> = record/stop</span><span><span class="keys">R</span> = play reference</span><span><span class="keys">M</span> = play mine</span><span><span class="keys">N</span> = next attempt</span></div>
+        <canvas id="pitchCanvas" width="1800" height="400"></canvas>
+        <div class="metrics">
+          <div class="metric"><div class="k">WPM</div><div class="v" id="mWpm">—</div><div class="t">target <span id="tWpm">120–150</span></div></div>
+          <div class="metric"><div class="k">Pitch variation</div><div class="v" id="mPvar">—</div><div class="t">target &gt; <span id="tPvar">12%</span></div></div>
+          <div class="metric"><div class="k">Pauses (&gt;400ms)</div><div class="v" id="mPause">—</div><div class="t">target ≥ <span id="tPause">4</span></div></div>
+          <div class="metric"><div class="k">Ending inflection</div><div class="v" id="mInflect">—</div><div class="t">target ↘ falling</div></div>
+        </div>
+        <div class="verdict" id="verdict" style="display:none"></div>
+        <div class="row" style="margin-top:10px">
+          <button id="deepBtn" onclick="runDeepCoach()" disabled>🧠 Deep coach (AI)</button>
+          <span class="small" id="deepStatus"></span>
+        </div>
+        <div class="deepcoach" id="deepCoach" style="display:none"></div>
+        <h3 style="margin-top:14px">Live transcript</h3>
+        <div class="transcript" id="trans">…</div>
+        <h3 style="margin-top:14px">Attempt history · goal: <b>3 consecutive ✓</b></h3>
+        <div class="history" id="history"></div>
+        <div class="progress" id="progress"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<div class="modal" id="welcomeModal">
+  <div class="card welcome" style="width:560px;max-width:96vw">
+    <h2>🎯 Welcome to Shadow Trainer</h2>
+    <div class="tagline">Practice DevOps/SRE interview answers like a real engineer. AI generates marked-up scripts, ElevenLabs voices them, you shadow and record, and the cockpit grades your delivery in real time.</div>
+    <div class="feat"><span class="check">✓</span> AI-generated answers in natural Indian-engineer voice with delivery markup</div>
+    <div class="feat"><span class="check">✓</span> ElevenLabs reference audio you can shadow line-by-line</div>
+    <div class="feat"><span class="check">✓</span> Live metrics: WPM, pitch variation, pauses, ending inflection</div>
+    <div class="feat"><span class="check">✓</span> AI deep-coach feedback after every attempt</div>
+
+    <div style="margin-top:14px"></div>
+    <div class="step">
+      <span class="stepnum">1</span><b>Get a free Groq key</b> (for AI coaching) — <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a> → sign in with Google → Create API Key
+      <label>Paste Groq key here</label>
+      <input id="wcGroq" type="password" placeholder="gsk_..." />
+    </div>
+    <div class="step">
+      <span class="stepnum">2</span><b>Get an ElevenLabs key</b> (for voice playback — optional but recommended) — <a href="https://elevenlabs.io/app/settings/api-keys" target="_blank" rel="noopener">elevenlabs.io/app/settings/api-keys</a> → sign up free → API Keys → Create
+      <label>Paste ElevenLabs key here (optional)</label>
+      <input id="wcEl" type="password" placeholder="sk_..." />
+    </div>
+    <div class="step" style="background:#0e1a13;border-color:#1e4d2e">
+      <span class="stepnum" style="background:var(--ok)">3</span><b>You're done.</b> Hit <b>＋ Ask AI</b> in the sidebar, type any interview question, practice with the audio. Drill until 3 ✓ in a row, repeat.
+    </div>
+    <div class="tip" style="margin-top:10px">Keys live in <i>your</i> browser only. Never type a key into a chat or share it. This app sends keys only to Groq / ElevenLabs / Anthropic — never to any server I control.</div>
+    <div class="actions">
+      <button onclick="dismissWelcome(true)">Skip — I'll configure later</button>
+      <button class="primary" onclick="dismissWelcome(false)">Save & start</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="askModal">
+  <div class="card" style="width:640px;max-width:96vw">
+    <h2>＋ Ask AI for an interview answer</h2>
+    <div class="small" style="margin-top:4px">Type any DevOps/SRE question. AI returns a marked-up answer in your voice, with drill sections, then it appears in your question list to practice.</div>
+    <label>Interview question</label>
+    <textarea id="askQ" rows="3" placeholder="e.g. How would you debug a Kubernetes pod stuck in CrashLoopBackOff?"></textarea>
+    <div id="askResult" class="small" style="margin-top:8px"></div>
+    <div class="actions">
+      <button onclick="closeAsk()">Cancel</button>
+      <button class="primary" id="askGenBtn" onclick="generateQuestion()">Generate</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="settingsModal">
+  <div class="card">
+    <h2>Settings</h2>
+    <label>ElevenLabs API key (for reference voice TTS)</label>
+    <input id="setEl" type="password" placeholder="sk_..." />
+    <label>AI provider for deep coach</label>
+    <select id="setProvider" onchange="onProviderChange()">
+      <option value="gemini">Google Gemini (free 1500/day) — recommended</option>
+      <option value="groq">Groq Llama 3.3 70B (free, very fast)</option>
+      <option value="anthropic">Anthropic Claude (paid)</option>
+      <option value="openai-compatible">OpenAI-compatible (DeepSeek / OpenRouter / etc.)</option>
+    </select>
+    <div class="small" id="providerHelp" style="margin-top:4px"></div>
+    <label>API key for the chosen provider</label>
+    <input id="setProviderKey" type="password" placeholder="paste provider key" />
+    <label>Model override (optional — leave blank for default)</label>
+    <input id="setProviderModel" placeholder="auto" />
+    <label id="setBaseUrlLabel" style="display:none">Base URL (OpenAI-compatible only)</label>
+    <input id="setProviderBase" placeholder="https://api.deepseek.com/v1" style="display:none" />
+    <label>Reference voice ID</label>
+    <input id="setVoice" placeholder="nPczCjzI2devNBz1zQrb (Brian, free tier)" />
+    <label>Target WPM (min,max)</label>
+    <input id="setWpm" value="120,150" />
+    <label>Target pitch variation % (min)</label>
+    <input id="setPvar" value="12" />
+    <label>Target pauses (min)</label>
+    <input id="setPause" value="4" />
+    <div class="tip">Keys are stored only in your browser's localStorage. No server. Never share keys in chat — rotate any key you paste somewhere public.</div>
+    <div id="testResult" class="small" style="margin-top:8px"></div>
+    <div class="actions">
+      <button onclick="testProvider()">Test connection</button>
+      <button onclick="closeSettings()">Cancel</button>
+      <button class="primary" onclick="saveSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ----- State -----
+const $ = id => document.getElementById(id);
+const S = {
+  elKey: localStorage.getItem('st_el') || '',
+  provider: localStorage.getItem('st_provider') || (localStorage.getItem('st_ant') ? 'anthropic' : 'gemini'),
+  providerKey: localStorage.getItem('st_pkey') || localStorage.getItem('st_ant') || '',
+  providerModel: localStorage.getItem('st_pmodel') || '',
+  providerBaseUrl: localStorage.getItem('st_pbase') || '',
+  voiceId: localStorage.getItem('st_voice') || 'nPczCjzI2devNBz1zQrb',
+  targetWpm: JSON.parse(localStorage.getItem('st_wpm') || '[120,150]'),
+  targetPvar: +(localStorage.getItem('st_pvar') || 12),
+  targetPause: +(localStorage.getItem('st_pause') || 4),
+  questions: JSON.parse(localStorage.getItem('st_questions') || 'null') || SEED_QUESTIONS(),
+  attempts: JSON.parse(localStorage.getItem('st_attempts') || '{}'),
+  audioCache: {},
+  currentQid: localStorage.getItem('st_current') || null,
+};
+const PROVIDER_DEFAULTS = {
+  anthropic: { model: 'claude-sonnet-4-6', label: 'Anthropic Claude (paid)', help: 'Get key at console.anthropic.com. Paid only.' },
+  gemini:    { model: 'gemini-2.0-flash', label: 'Google Gemini (free 1500/day)', help: 'Get free key at aistudio.google.com → Get API key. Generous free tier.' },
+  groq:      { model: 'llama-3.3-70b-versatile', label: 'Groq Llama 3.3 70B (free, fast)', help: 'Get free key at console.groq.com. Very fast, generous free tier.' },
+  'openai-compatible': { model: 'deepseek-chat', label: 'OpenAI-compatible (DeepSeek/OpenRouter/etc.)', help: 'Works with any OpenAI-compatible endpoint. Set Base URL + key.' },
+};
+
+function SEED_QUESTIONS() {
+  return [{
+    id: 'q1-incident-kafka',
+    topic: 'incidents',
+    question: "Walk me through a recent production incident you handled. What happened, how did you debug it, what was the root cause, and what did you take away from it?",
+    markedAnswer: "So... basically, last quarter we had a __Kafka__ consumer lag spike at three AM. // PagerDuty woke me up — the alert was: lag is over fifty thousand messages on our ↑payments↑ topic. // My first instinct? CHECK the consumer pods. They were all running... no restarts. // So actually, what I did next — I looked at the Kafka broker metrics. CPU was fine. // Then I checked the network. And here's where it got interesting — there was a sudden drop in throughput, exactly when our agentic-AI feature flag rolled out. (drop) One of the new agents... was holding messages open for retry logic. // What I did was: I rolled back the flag, lag drained in ten minutes, and we shipped a fix the next day with proper timeout handling. (drop) The lesson? // Anytime you ship an autonomous loop... ~always~ put a hard timeout on it. // Otherwise it WILL hold resources you did not expect.",
+    ttsText: "So... basically, last quarter we had a Kafka consumer lag spike at three AM. PagerDuty woke me up — the alert was: lag is over fifty thousand messages on our payments topic. My first instinct? CHECK the consumer pods. They were all running... no restarts. So actually, what I did next — I looked at the Kafka broker metrics. CPU was fine. Then I checked the network. And here is where it got interesting — there was a sudden drop in throughput, exactly when our agentic-AI feature flag rolled out. One of the new agents... was holding messages open for retry logic. What I did was: I rolled back the flag, lag drained in ten minutes, and we shipped a fix the next day with proper timeout handling. The lesson? Anytime you ship an autonomous loop... always put a hard timeout on it. Otherwise it will hold resources you did not expect.",
+    emphasis: ["CHECK","always","WILL","lesson","Kafka"],
+  }];
+}
+
+function persist() {
+  localStorage.setItem('st_questions', JSON.stringify(S.questions));
+  localStorage.setItem('st_attempts', JSON.stringify(S.attempts));
+  if (S.currentQid) localStorage.setItem('st_current', S.currentQid);
+}
+
+// ----- IndexedDB for audio blobs -----
+let _db;
+function idb() {
+  return _db || (_db = new Promise((res,rej)=>{
+    const r = indexedDB.open('shadow-trainer', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('audio');
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  }));
+}
+async function idbPut(qid, blob) { const db=await idb(); return new Promise((res,rej)=>{const tx=db.transaction('audio','readwrite');tx.objectStore('audio').put(blob,qid);tx.oncomplete=()=>res();tx.onerror=()=>rej(tx.error);}); }
+async function idbGet(qid) { const db=await idb(); return new Promise((res)=>{const tx=db.transaction('audio','readonly');const r=tx.objectStore('audio').get(qid);r.onsuccess=()=>res(r.result||null);r.onerror=()=>res(null);}); }
+async function idbDel(qid) { const db=await idb(); return new Promise((res)=>{const tx=db.transaction('audio','readwrite');tx.objectStore('audio').delete(qid);tx.oncomplete=()=>res();}); }
+
+// ----- Markup renderer -----
+function renderMarkup(text) {
+  // Order matters
+  let h = text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // << ... >>
+  h = h.replace(/&lt;&lt;([^&]*?)&gt;&gt;/g,'<span class="slow">$1</span>');
+  // (drop)WORDS until next punctuation? Simpler: highlight (drop) marker + following clause until period
+  h = h.replace(/\(drop\)\s*([^.!?]+[.!?])/g,'<span class="drop">$1</span>');
+  // // long pause
+  h = h.replace(/\s\/\/\s/g,' <span class="pause-long">‖</span> ');
+  // ... short pause (only when 3+ dots)
+  h = h.replace(/\.{3,}/g,'<span class="pause-short">…</span>');
+  // __word__ underline (heavy stress) — match FIRST before single _
+  h = h.replace(/__([^_]+)__/g,'<span class="underline">$1</span>');
+  // _word_ light stress (dotted underline)
+  h = h.replace(/(^|[\s.,;:!?—-])_([^_\s][^_]*?)_(?=[\s.,;:!?—-]|$)/g,'$1<span class="lstress">$2</span>');
+  // ~word~ elongate
+  h = h.replace(/~([^~\s][^~]*?)~/g,'<span class="elong">$1</span>');
+  // ↑word↑ pitch up
+  h = h.replace(/↑([^↑]+)↑/g,'<span class="up">$1</span>');
+  // ↓word↓ pitch down (confidence drop)
+  h = h.replace(/↓([^↓]+)↓/g,'<span class="down">$1</span>');
+  // standalone ↓ or ↑ as arrows
+  h = h.replace(/↓/g,'<span class="down">↓</span>');
+  h = h.replace(/↑/g,'<span class="up">↑</span>');
+  // CAPS — 2+ uppercase letters in a row, word boundary
+  h = h.replace(/\b([A-Z]{2,})\b/g,'<span class="caps">$1</span>');
+  return h;
+}
+
+// ----- Question list rendering -----
+function renderQuestionList() {
+  const el = $('qList');
+  el.innerHTML='';
+  S.questions.forEach(q=>{
+    const div = document.createElement('div');
+    div.className = 'qitem' + (q.id===S.currentQid?' active':'');
+    const atts = S.attempts[q.id]||[];
+    const passes = atts.filter(a=>a.verdict==='pass').length;
+    const status = passes>=3 ? '<span class="pill ok">✓ solid</span>' : atts.length ? `<span class="pill warn">${atts.length} tries</span>` : '';
+    div.innerHTML = `<div class="topic">${q.topic}</div><div>${q.question.slice(0,72)}${q.question.length>72?'…':''}</div><div style="margin-top:4px">${status}</div>`;
+    div.onclick = () => selectQuestion(q.id);
+    el.appendChild(div);
+  });
+  if (!S.questions.length) {
+    el.innerHTML = '<div class="small">No questions yet. Click ＋ Import JSON.</div>';
+  }
+}
+
+function selectQuestion(qid) {
+  S.currentQid = qid; persist();
+  const q = S.questions.find(x=>x.id===qid);
+  if (!q){ return; }
+  $('emptyState').style.display='none';
+  $('practiceView').style.display='';
+  $('qTopic').textContent = q.topic||'general';
+  $('qText').textContent = q.question;
+  $('markedAnswer').innerHTML = renderMarkup(q.markedAnswer);
+  $('tWpm').textContent = `${S.targetWpm[0]}–${S.targetWpm[1]}`;
+  $('tPvar').textContent = `${S.targetPvar}%`;
+  $('tPause').textContent = S.targetPause;
+  resetMetrics();
+  renderHistory();
+  renderDrill(q);
+  // Load cached audio
+  loadCachedAudio(qid);
+  renderQuestionList();
+}
+
+async function loadCachedAudio(qid) {
+  const blob = await idbGet(qid);
+  const audio = $('refAudio');
+  if (blob) {
+    const url = URL.createObjectURL(blob);
+    audio.src = url; audio.style.display='block';
+    $('audioStatus').textContent = 'cached ✓';
+  } else {
+    audio.src = ''; audio.style.display='none';
+    $('audioStatus').textContent = '';
+  }
+}
+
+// ----- ElevenLabs TTS -----
+async function generateReference() {
+  const q = currentQ(); if (!q) return;
+  if (!S.elKey) { alert('Set your ElevenLabs API key in Settings first.'); openSettings(); return; }
+  // Already cached? just play
+  const blob = await idbGet(q.id);
+  if (blob && !$('refAudio').dataset.forceRegen) {
+    $('refAudio').play(); return;
+  }
+  $('refAudio').dataset.forceRegen = '';
+  $('audioStatus').innerHTML = '<span class="spinner"></span> generating...';
+  $('genBtn').disabled = true;
+  try {
+    const resp = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${S.voiceId}`, {
+      method:'POST',
+      headers:{'xi-api-key':S.elKey,'Content-Type':'application/json','accept':'audio/mpeg'},
+      body: JSON.stringify({
+        text: q.ttsText,
+        model_id: 'eleven_multilingual_v2',
+        voice_settings: { stability:0.45, similarity_boost:0.78, style:0.3, use_speaker_boost:true }
+      })
+    });
+    if (!resp.ok) {
+      const t = await resp.text();
+      throw new Error('ElevenLabs: '+resp.status+' '+t.slice(0,200));
+    }
+    const newBlob = await resp.blob();
+    await idbPut(q.id, newBlob);
+    const url = URL.createObjectURL(newBlob);
+    $('refAudio').src = url; $('refAudio').style.display='block';
+    $('audioStatus').textContent = 'generated ✓ — press play';
+    $('refAudio').play();
+  } catch (e) {
+    $('audioStatus').innerHTML = '<span style="color:var(--bad)">'+e.message+'</span>';
+  } finally {
+    $('genBtn').disabled = false;
+  }
+}
+
+async function regenAudio() {
+  const q = currentQ(); if (!q) return;
+  if (!confirm('Regenerate reference audio? This burns ElevenLabs credits.')) return;
+  await idbDel(q.id);
+  $('refAudio').dataset.forceRegen = '1';
+  generateReference();
+}
+
+// ----- Recording + analysis -----
+let audioCtx, micStream, mediaRec, analyser, raf, recChunks=[], lastBlobUrl=null;
+let startMs=0, lastEnergyMs=0, pauseCount=0, inPause=false;
+let pitches=[], pitchHistory=[];
+let recog, finalText='', interimText='';
+let recording = false;
+
+function currentQ(){ return S.questions.find(x=>x.id===S.currentQid); }
+
+function autoCorrelate(buf, sr){
+  let SIZE=buf.length, rms=0;
+  for(let i=0;i<SIZE;i++) rms+=buf[i]*buf[i];
+  rms=Math.sqrt(rms/SIZE);
+  if(rms<0.01) return -1;
+  let r1=0,r2=SIZE-1,thr=0.2;
+  for(let i=0;i<SIZE/2;i++) if(Math.abs(buf[i])<thr){r1=i;break;}
+  for(let i=1;i<SIZE/2;i++) if(Math.abs(buf[SIZE-i])<thr){r2=SIZE-i;break;}
+  buf=buf.slice(r1,r2); SIZE=buf.length;
+  if (SIZE<32) return -1;
+  const c=new Array(SIZE).fill(0);
+  for(let i=0;i<SIZE;i++) for(let j=0;j<SIZE-i;j++) c[i]+=buf[j]*buf[j+i];
+  let d=0; while(d<SIZE-1 && c[d]>c[d+1]) d++;
+  let maxv=-1,maxp=-1;
+  for(let i=d;i<SIZE;i++) if(c[i]>maxv){maxv=c[i];maxp=i;}
+  if(maxp<=0) return -1;
+  const x1=c[maxp-1]||0, x2=c[maxp], x3=c[maxp+1]||0;
+  const a=(x1+x3-2*x2)/2, b=(x3-x1)/2;
+  let T0=maxp; if(a) T0=maxp - b/(2*a);
+  const hz=sr/T0;
+  if(hz<70||hz>500) return -1;
+  return hz;
+}
+
+function drawCanvas(){
+  const c = $('pitchCanvas'), ctx = c.getContext('2d');
+  const W=c.width, H=c.height;
+  ctx.fillStyle='#0a0d12'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#1b232b'; ctx.lineWidth=1;
+  ctx.fillStyle='#33404d'; ctx.font='11px monospace';
+  for(let hz=100;hz<=400;hz+=50){
+    const y=H - ((hz-70)/(450-70))*H;
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+    ctx.fillText(hz+'Hz', 4, y-2);
+  }
+  if(pitchHistory.length<2) return;
+  const t0=pitchHistory[0].t, tN=pitchHistory[pitchHistory.length-1].t;
+  const span=Math.max(1, tN-t0);
+  ctx.strokeStyle='#58a6ff'; ctx.lineWidth=2.5;
+  ctx.beginPath();
+  let started=false;
+  for(const p of pitchHistory){
+    const x=((p.t-t0)/span)*W;
+    if(p.hz<=0){ started=false; continue; }
+    const y=H - ((p.hz-70)/(450-70))*H;
+    if(!started){ ctx.moveTo(x,y); started=true; } else ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+}
+
+function tick(){
+  if(!analyser) return;
+  const buf=new Float32Array(analyser.fftSize);
+  analyser.getFloatTimeDomainData(buf);
+  let energy=0; for(let i=0;i<buf.length;i++) energy+=buf[i]*buf[i];
+  energy=Math.sqrt(energy/buf.length);
+  const now=performance.now();
+  const tRel=(now-startMs)/1000;
+  if(energy>0.015){
+    if(inPause && (now-lastEnergyMs)>400) pauseCount++;
+    inPause=false; lastEnergyMs=now;
+  } else if(!inPause && (now-lastEnergyMs)>400){ inPause=true; }
+  const hz=autoCorrelate(buf, audioCtx.sampleRate);
+  if(hz>0) pitches.push(hz);
+  pitchHistory.push({t:tRel, hz: hz>0?hz:-1});
+  if(pitchHistory.length>3600) pitchHistory.shift();
+  drawCanvas();
+  $('recTimer').textContent = tRel.toFixed(1)+'s';
+  raf=requestAnimationFrame(tick);
+}
+
+async function startRec(){
+  if (recording) return;
+  if (!currentQ()) { alert('Pick a question first.'); return; }
+  finalText=''; interimText=''; pitches=[]; pitchHistory=[]; pauseCount=0; inPause=false;
+  $('trans').textContent='…';
+  $('verdict').style.display='none'; $('deepCoach').style.display='none';
+  resetMetrics();
+  try {
+    audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    micStream = await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
+  } catch(e){ alert('Mic error: '+e.message); return; }
+  const src=audioCtx.createMediaStreamSource(micStream);
+  analyser=audioCtx.createAnalyser(); analyser.fftSize=2048;
+  src.connect(analyser);
+  mediaRec=new MediaRecorder(micStream); recChunks=[];
+  mediaRec.ondataavailable=e=>{ if(e.data.size) recChunks.push(e.data); };
+  mediaRec.onstop=()=>{
+    const blob=new Blob(recChunks,{type:mediaRec.mimeType||'audio/webm'});
+    if (lastBlobUrl) URL.revokeObjectURL(lastBlobUrl);
+    lastBlobUrl = URL.createObjectURL(blob);
+    $('playMineBtn').disabled = false;
+  };
+  mediaRec.start();
+  startMs=performance.now(); lastEnergyMs=startMs;
+  $('recState').textContent='● recording'; $('recState').style.background='#3a1414'; $('recState').style.color='#ff7b72';
+  $('recBtn').disabled=true; $('stopBtn').disabled=false;
+  // Speech recognition
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(SR){
+    const startRecog = (lang) => {
+      recog=new SR(); recog.lang=lang; recog.continuous=true; recog.interimResults=true;
+      let gotAny=false;
+      recog.onresult=e=>{
+        gotAny=true;
+        interimText='';
+        for(let i=e.resultIndex;i<e.results.length;i++){
+          const r=e.results[i];
+          if(r.isFinal) finalText += r[0].transcript+' ';
+          else interimText += r[0].transcript;
+        }
+        $('trans').innerHTML = finalText + '<span class="interim">'+interimText+'</span>';
+      };
+      recog.onerror=ev=>{
+        const msg = ev.error || 'unknown';
+        if (msg==='no-speech') return;
+        $('trans').innerHTML = '<span style="color:var(--bad)">SpeechRecognition error: '+msg+'</span>' +
+          (location.protocol==='file:' ? '<br><span class="interim">file:// often blocks Chrome STT. Run a local server (see tip below) and open http://localhost:8000/shadow-trainer.html instead.</span>' : '');
+      };
+      recog.onend=()=>{
+        if (recording && !gotAny && lang==='en-IN') {
+          // retry once with en-US
+          try{ startRecog('en-US'); }catch(_){}
+        }
+      };
+      try{ recog.start(); }catch(e){
+        $('trans').innerHTML = '<span style="color:var(--bad)">Could not start SpeechRecognition: '+e.message+'</span>';
+      }
+    };
+    startRecog('en-IN');
+  } else {
+    $('trans').innerHTML = '<span class="interim">(Web Speech not supported — WPM/transcript unavailable. Use Chrome/Edge.)</span>';
+  }
+  recording = true;
+  tick();
+}
+
+function stopRec(){
+  if (!recording) return;
+  recording = false;
+  cancelAnimationFrame(raf);
+  if (mediaRec && mediaRec.state==='recording') mediaRec.stop();
+  if (recog) try{ recog.stop(); }catch(_){}
+  if (micStream) micStream.getTracks().forEach(t=>t.stop());
+  $('recState').textContent='done'; $('recState').style.background='#0e2a17'; $('recState').style.color='#3fb950';
+  $('recBtn').disabled=false; $('stopBtn').disabled=true;
+  finalize();
+}
+
+function playMine(){ if (lastBlobUrl){ const a = new Audio(lastBlobUrl); a.play(); } }
+function resetForNext(){
+  resetMetrics();
+  $('verdict').style.display='none'; $('deepCoach').style.display='none';
+  $('trans').textContent='…';
+  $('recTimer').textContent='0.0s';
+  $('recState').textContent='idle'; $('recState').style.background=''; $('recState').style.color='';
+  pitchHistory=[]; drawCanvas();
+  $('playMineBtn').disabled=true; $('nextBtn').disabled=true; $('deepBtn').disabled=true;
+}
+
+function resetMetrics(){
+  ['mWpm','mPvar','mPause','mInflect'].forEach(id=>{ const e=$(id); e.textContent='—'; e.classList.remove('ok','warn','bad'); });
+}
+
+function colorize(el, val, lo, hi){
+  el.classList.remove('ok','warn','bad');
+  if(val>=lo && val<=hi) el.classList.add('ok');
+  else if(val>=lo*0.85 && val<=hi*1.15) el.classList.add('warn');
+  else el.classList.add('bad');
+}
+
+function finalize(){
+  const dur=(performance.now()-startMs)/1000;
+  const transcript = finalText.trim();
+  const words = transcript.split(/\s+/).filter(Boolean).length;
+  const wpm = dur>0 ? (words/(dur/60)) : 0;
+  let mean=0; pitches.forEach(p=>mean+=p); mean=pitches.length?mean/pitches.length:0;
+  let varSum=0; pitches.forEach(p=>varSum+=(p-mean)**2);
+  const std=pitches.length?Math.sqrt(varSum/pitches.length):0;
+  const pvar=mean?(std/mean)*100:0;
+  // Ending inflection: slope of last 0.6s of voiced pitches
+  const tailMin = dur - 0.6;
+  const tail = pitchHistory.filter(p=>p.hz>0 && p.t>=tailMin);
+  let slope = 0;
+  if (tail.length>=4){
+    const n=tail.length;
+    const xs=tail.map(p=>p.t), ys=tail.map(p=>p.hz);
+    const mx=xs.reduce((a,b)=>a+b)/n, my=ys.reduce((a,b)=>a+b)/n;
+    let num=0,den=0;
+    for(let i=0;i<n;i++){ num+=(xs[i]-mx)*(ys[i]-my); den+=(xs[i]-mx)**2; }
+    slope = den ? num/den : 0;
+  }
+  // Display
+  $('mWpm').textContent = Math.round(wpm);
+  $('mPvar').textContent = pvar.toFixed(1)+'%';
+  $('mPause').textContent = pauseCount;
+  const inflectArrow = slope < -2 ? '↘' : slope > 2 ? '↗' : '→';
+  $('mInflect').textContent = inflectArrow + ' ' + (slope<0?'falling':slope>0?'rising':'flat');
+  colorize($('mWpm'), wpm, S.targetWpm[0], S.targetWpm[1]);
+  $('mPvar').classList.add(pvar>=S.targetPvar?'ok':pvar>=S.targetPvar*0.7?'warn':'bad');
+  $('mPause').classList.add(pauseCount>=S.targetPause?'ok':pauseCount>=S.targetPause*0.5?'warn':'bad');
+  $('mInflect').classList.add(slope<-1?'ok':slope<2?'warn':'bad');
+
+  const checks = {
+    wpm: wpm >= S.targetWpm[0] && wpm <= S.targetWpm[1],
+    pvar: pvar >= S.targetPvar,
+    pause: pauseCount >= S.targetPause,
+    inflect: slope < 0,
+  };
+  const pass = Object.values(checks).filter(Boolean).length;
+  const verdict = pass===4 ? 'pass' : pass>=2 ? 'warn' : 'fail';
+
+  const attempt = { ts: Date.now(), dur, wpm, pvar, pauseCount, slope, transcript, checks, verdict };
+  const qid = S.currentQid;
+  if(!S.attempts[qid]) S.attempts[qid]=[];
+  S.attempts[qid].push(attempt);
+  persist();
+
+  // Local feedback
+  const fixes = [];
+  if (!checks.wpm) {
+    if (wpm > S.targetWpm[1]) fixes.push(`<b>You're rushing</b> at ${Math.round(wpm)} wpm. Target is ${S.targetWpm[0]}–${S.targetWpm[1]}. Pause longer at every <span class="keys">//</span> mark — count "one-two" silently before continuing.`);
+    else fixes.push(`<b>You're slow</b> at ${Math.round(wpm)} wpm. Punch transitional phrases ("So actually", "What I did was") with more energy.`);
+  }
+  if (!checks.pvar) fixes.push(`<b>Monotone</b> — pitch variation only ${pvar.toFixed(1)}%, target ${S.targetPvar}%+. Exaggerate pitch on emphasis words: <b>${currentQ().emphasis.join(', ')}</b>. Go higher on ↑ marks, lower on (drop).`);
+  if (!checks.pause) fixes.push(`<b>Not enough pauses</b> — got ${pauseCount}, need ${S.targetPause}+. Every <span class="keys">//</span> is a hard stop. Breathe.`);
+  if (!checks.inflect) fixes.push(`<b>Rising inflection at the end</b> (upspeak — sounds uncertain). DROP your pitch on the last word. The lesson sentence ("Otherwise it WILL hold resources...") must end DOWN.`);
+  if (!fixes.length) fixes.push('All four targets hit. Listen back, compare to reference, and lock it in. Two more clean ones and this question is solid.');
+
+  $('verdict').className = 'verdict ' + verdict;
+  $('verdict').style.display='block';
+  $('verdict').innerHTML = `<h4>${verdict==='pass'?'✓ Pass':verdict==='warn'?'⚠ Close':'✗ Off target'} · ${pass}/4 targets</h4><ul>${fixes.map(f=>'<li>'+f+'</li>').join('')}</ul>`;
+  $('deepBtn').disabled = false;
+  $('nextBtn').disabled = false;
+  renderHistory();
+}
+
+function renderHistory(){
+  const q = currentQ(); if (!q) return;
+  const atts = S.attempts[q.id]||[];
+  const el = $('history');
+  el.innerHTML='';
+  atts.forEach((a,i)=>{
+    const d=document.createElement('div');
+    d.className='hdot '+a.verdict;
+    d.title=`#${i+1} · WPM ${Math.round(a.wpm)} · pvar ${a.pvar.toFixed(1)}% · pauses ${a.pauseCount} · slope ${a.slope.toFixed(1)}`;
+    d.textContent=(i+1);
+    el.appendChild(d);
+  });
+  // Consecutive pass tracking
+  let streak=0;
+  for(let i=atts.length-1;i>=0;i--){
+    if(atts[i].verdict==='pass') streak++; else break;
+  }
+  const prog = $('progress');
+  if (streak>=3){
+    prog.className='progress done';
+    prog.textContent=`🏆 Solid — ${streak} consecutive passes. Move to the next question.`;
+  } else {
+    prog.className='progress';
+    prog.textContent=`Current streak: ${streak}/3 passes. Total attempts: ${atts.length}.`;
+  }
+}
+
+// ----- Deep coach (multi-provider) -----
+async function runDeepCoach() {
+  if (!S.providerKey) { alert('Set your AI provider key in Settings first.'); openSettings(); return; }
+  const q = currentQ();
+  const atts = S.attempts[q.id]||[];
+  if (!atts.length) return;
+  const a = atts[atts.length-1];
+  $('deepStatus').innerHTML = '<span class="spinner"></span> asking '+S.provider+'...';
+  $('deepBtn').disabled = true;
+  try {
+    const sys = `You are a public-speaking coach for an Indian software engineer practicing DevOps/SRE interview answers. You judge delivery and content. Be SPECIFIC: quote exact words from the model answer that the candidate handled well or poorly. Give 2-3 concrete fixes for the next attempt. No fluff. Under 180 words.`;
+    const user = `Interview question:\n${q.question}\n\nModel answer (markup: CAPS=heavy stress, __underline__=stress, ↑=pitch up, ~elongate~, (drop)=intimate, //=long pause, <<>>=slow):\n${q.markedAnswer}\n\nCandidate's transcript:\n"${a.transcript}"\n\nMeasured delivery:\n- WPM: ${Math.round(a.wpm)} (target ${S.targetWpm[0]}-${S.targetWpm[1]})\n- Pitch variation: ${a.pvar.toFixed(1)}% (target ${S.targetPvar}%+)\n- Pauses: ${a.pauseCount} (target ${S.targetPause}+)\n- Ending pitch slope: ${a.slope.toFixed(1)} Hz/s (negative=falling/confident, positive=rising/upspeak)\n\nCoach the next attempt. What specifically to fix.`;
+    const text = await callProvider(sys, user);
+    $('deepCoach').style.display='block';
+    $('deepCoach').textContent = text;
+    $('deepStatus').textContent='';
+  } catch(e){
+    $('deepStatus').innerHTML='<span style="color:var(--bad)">'+e.message+'</span>';
+  } finally {
+    $('deepBtn').disabled = false;
+  }
+}
+
+async function testProvider(){
+  // Use unsaved form values so user can test before saving
+  const stash = { p:S.provider, k:S.providerKey, m:S.providerModel, b:S.providerBaseUrl };
+  S.provider = $('setProvider').value;
+  S.providerKey = $('setProviderKey').value.trim();
+  S.providerModel = $('setProviderModel').value.trim();
+  S.providerBaseUrl = $('setProviderBase').value.trim();
+  const r = $('testResult');
+  r.innerHTML = '<span class="spinner"></span> testing '+S.provider+'...';
+  try {
+    const t = await callProvider('Reply with exactly: OK', 'ping');
+    r.innerHTML = '<span style="color:var(--ok)">✓ connected · model replied: "'+(t.slice(0,60))+'"</span>';
+  } catch(e){
+    r.innerHTML = '<span style="color:var(--bad)">✗ '+e.message+'</span>';
+  } finally {
+    S.provider = stash.p; S.providerKey = stash.k; S.providerModel = stash.m; S.providerBaseUrl = stash.b;
+  }
+}
+
+async function callProvider(sys, user, maxTokens){
+  const mt = maxTokens || 600;
+  switch (S.provider) {
+    case 'anthropic': return callAnthropic(sys, user, mt);
+    case 'gemini':    return callGemini(sys, user, mt);
+    case 'groq':      return callGroq(sys, user, mt);
+    case 'openai-compatible': return callOpenAICompat(sys, user, mt);
+    default: throw new Error('Unknown provider: '+S.provider);
+  }
+}
+async function callAnthropic(sys, user, mt){
+  const model = S.providerModel || PROVIDER_DEFAULTS.anthropic.model;
+  const resp = await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{ 'x-api-key':S.providerKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true','content-type':'application/json' },
+    body: JSON.stringify({ model, max_tokens:mt, system:sys, messages:[{role:'user',content:user}] })
+  });
+  if (!resp.ok){ const t=await resp.text(); throw new Error('Anthropic '+resp.status+': '+t.slice(0,250)); }
+  const j = await resp.json();
+  return j.content?.[0]?.text || '(empty response)';
+}
+async function callGemini(sys, user, mt){
+  const model = S.providerModel || PROVIDER_DEFAULTS.gemini.model;
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(S.providerKey)}`;
+  const resp = await fetch(url, {
+    method:'POST',
+    headers:{ 'content-type':'application/json' },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: sys }] },
+      contents: [{ role:'user', parts: [{ text: user }] }],
+      generationConfig: { maxOutputTokens: mt, temperature: 0.7 }
+    })
+  });
+  if (!resp.ok){ const t=await resp.text(); throw new Error('Gemini '+resp.status+': '+t.slice(0,250)); }
+  const j = await resp.json();
+  return j.candidates?.[0]?.content?.parts?.[0]?.text || '(empty response)';
+}
+async function callGroq(sys, user, mt){
+  const model = S.providerModel || PROVIDER_DEFAULTS.groq.model;
+  const resp = await fetch('https://api.groq.com/openai/v1/chat/completions',{
+    method:'POST',
+    headers:{ 'Authorization':'Bearer '+S.providerKey,'content-type':'application/json' },
+    body: JSON.stringify({ model, max_tokens:mt, messages:[{role:'system',content:sys},{role:'user',content:user}] })
+  });
+  if (!resp.ok){ const t=await resp.text(); throw new Error('Groq '+resp.status+': '+t.slice(0,250)); }
+  const j = await resp.json();
+  return j.choices?.[0]?.message?.content || '(empty response)';
+}
+async function callOpenAICompat(sys, user, mt){
+  if (!S.providerBaseUrl) throw new Error('Set Base URL in Settings (e.g. https://api.deepseek.com/v1)');
+  const model = S.providerModel || PROVIDER_DEFAULTS['openai-compatible'].model;
+  const url = S.providerBaseUrl.replace(/\/$/,'') + '/chat/completions';
+  const resp = await fetch(url, {
+    method:'POST',
+    headers:{ 'Authorization':'Bearer '+S.providerKey,'content-type':'application/json' },
+    body: JSON.stringify({ model, max_tokens:mt, messages:[{role:'system',content:sys},{role:'user',content:user}] })
+  });
+  if (!resp.ok){ const t=await resp.text(); throw new Error('Provider '+resp.status+': '+t.slice(0,250)); }
+  const j = await resp.json();
+  return j.choices?.[0]?.message?.content || '(empty response)';
+}
+
+// ----- Import JSON -----
+function importJSON(){
+  const inp = document.createElement('input');
+  inp.type='file'; inp.accept='.json,application/json';
+  inp.onchange = async () => {
+    const f = inp.files[0]; if (!f) return;
+    try {
+      const txt = await f.text();
+      const data = JSON.parse(txt);
+      const incoming = Array.isArray(data) ? data : (data.questions||[]);
+      if (!incoming.length) throw new Error('No questions found in file.');
+      // Merge: by id (incoming wins)
+      const byId = Object.fromEntries(S.questions.map(q=>[q.id,q]));
+      for (const q of incoming) {
+        if (!q.id || !q.question || !q.markedAnswer || !q.ttsText) throw new Error('Each question needs id, question, markedAnswer, ttsText.');
+        byId[q.id] = { topic:'general', emphasis:[], ...q };
+      }
+      S.questions = Object.values(byId);
+      persist();
+      renderQuestionList();
+      alert(`Imported. Total questions: ${S.questions.length}`);
+    } catch(e){ alert('Import failed: '+e.message); }
+  };
+  inp.click();
+}
+
+// ----- Welcome / first-run -----
+function showWelcome(){
+  $('wcGroq').value = S.provider==='groq' ? S.providerKey : '';
+  $('wcEl').value = S.elKey || '';
+  $('welcomeModal').classList.add('show');
+}
+function dismissWelcome(skip){
+  if (!skip) {
+    const g = $('wcGroq').value.trim();
+    const e = $('wcEl').value.trim();
+    if (g) { S.provider='groq'; S.providerKey=g; localStorage.setItem('st_provider','groq'); localStorage.setItem('st_pkey',g); }
+    if (e) { S.elKey=e; localStorage.setItem('st_el',e); }
+  }
+  localStorage.setItem('st_welcomed','1');
+  $('welcomeModal').classList.remove('show');
+}
+
+// ----- Ask AI: generate new question via provider -----
+const COACH_SYSTEM_PROMPT = `You are a DevOps/SRE interview coach for Balaji, a 5-year-experience Indian engineer preparing for interviews.
+
+LANGUAGE & TONE:
+- Sound like a real Indian engineer with 5 years experience — natural, honest, slightly conversational, a little nervous-real, not polished or scripted.
+- Use fillers sparingly and naturally: um, uh, actually, basically, you know, I mean, so. Just enough to sound human, not too many.
+- Grammar can be slightly imperfect. Sentences simple and a bit messy is fine.
+
+CONTENT:
+- Answer from real-world experience only. Use story format: problem happened → alert came → what I checked → how I fixed → what I learned.
+- Mention tools naturally where relevant: Jenkins, Docker, Kubernetes (OOMKilled, CrashLoop, HPA), Prometheus/Grafana, PagerDuty, Terraform, AWS, Kafka, Linux debugging.
+- Weave in agentic-AI experience here and there where it genuinely fits (AI agent doing alert triage, self-healing, log summarizing in Slack) — strengthens the profile, but don't force it into every answer.
+- Compare solutions casually when useful ("rolling update is easy but risky, blue-green is safer but more work").
+- End each answer with one small lesson.
+- Keep answers natural length — about 6 to 9 sentences.
+
+DELIVERY MARKUP:
+- CAPS = heavy stress on this word
+- _word_ = light stress
+- ~word~ = elongate / stretch the word
+- (drop) = lower, intimate voice here
+- ... = short pause
+- // = longer pause
+- << >> = slow down this part
+- ↑ = lift pitch / energy up
+- ↓ = drop pitch to land the point with confidence
+
+PUBLIC-SPEAKING TECHNIQUES to build into the markup:
+- Downward inflection at the end of key statements (the strongest confidence signal — mark with ↓).
+- A tactical pause before the most important word, not after.
+- Contrast pairing: light-then-heavy ("not just a goal... it is a RESPONSIBILITY").
+- Vary sentence-opening energy.
+- Slow down << >> on the single most important phrase.
+
+OUTPUT FORMAT — Respond with ONLY a single valid JSON object, no prose before/after, no markdown code fences. Schema:
+
+{
+  "topic": "incidents | kubernetes | ci-cd | aws | kafka | security | branching | linux | terraform | observability | general",
+  "question": "the interview question (echo back, cleaned up)",
+  "markedAnswer": "the full marked-up spoken answer with CAPS, _word_, __word__ (heavy stress also acceptable), ~word~, (drop), ..., //, <<phrase>>, ↑ and ↓ tokens",
+  "ttsText": "the same answer with all markup tokens stripped, keeping natural punctuation (commas, em-dashes, ellipses) so ElevenLabs delivers good prosody",
+  "emphasis": ["3 to 5 of the most important words in CAPS"],
+  "repeatDrill": ["line 1 to repeat aloud", "line 2", "line 3"],
+  "toneGuide": ["emotion/tone for line 1", "tone for line 2", "tone for line 3"],
+  "pauseMap": "short description of where to pause and how long (1-3 sentences)",
+  "powerPhrase": "the one killer line to memorize and deliver with full confidence"
+}`;
+
+function openAsk(){ $('askQ').value=''; $('askResult').textContent=''; $('askModal').classList.add('show'); setTimeout(()=>$('askQ').focus(),50); }
+function closeAsk(){ $('askModal').classList.remove('show'); }
+
+async function generateQuestion(){
+  const q = $('askQ').value.trim();
+  if (!q){ $('askResult').innerHTML='<span style="color:var(--bad)">Type a question first.</span>'; return; }
+  if (!S.providerKey){ alert('Set your AI provider key in Settings first.'); closeAsk(); openSettings(); return; }
+  $('askResult').innerHTML='<span class="spinner"></span> generating answer via '+S.provider+'...';
+  $('askGenBtn').disabled = true;
+  try {
+    const raw = await callProvider(COACH_SYSTEM_PROMPT, q, 2500);
+    const data = parseAIJson(raw);
+    if (!data || !data.markedAnswer || !data.ttsText){
+      const truncated = raw.length > 800 && !raw.trim().endsWith('}');
+      throw new Error((truncated?'Response was cut off (model returned partial JSON). ':'Could not parse JSON. ')+'First 400 chars: '+raw.slice(0,400)+'...');
+    }
+    const id = 'q-'+Date.now().toString(36);
+    const entry = {
+      id,
+      topic: data.topic || 'general',
+      question: data.question || q,
+      markedAnswer: data.markedAnswer,
+      ttsText: data.ttsText,
+      emphasis: Array.isArray(data.emphasis) ? data.emphasis : [],
+      drill: {
+        repeat: Array.isArray(data.repeatDrill) ? data.repeatDrill : [],
+        tone: Array.isArray(data.toneGuide) ? data.toneGuide : [],
+        pauseMap: data.pauseMap || '',
+        powerPhrase: data.powerPhrase || ''
+      }
+    };
+    S.questions.push(entry);
+    persist();
+    renderQuestionList();
+    closeAsk();
+    selectQuestion(id);
+  } catch(e){
+    $('askResult').innerHTML='<span style="color:var(--bad)">'+e.message+'</span>';
+  } finally {
+    $('askGenBtn').disabled = false;
+  }
+}
+
+function parseAIJson(raw){
+  // Try direct parse first
+  try { return JSON.parse(raw); } catch(_){}
+  // Strip code fences
+  let s = raw.trim();
+  s = s.replace(/^```(?:json)?\s*/i,'').replace(/```\s*$/,'');
+  try { return JSON.parse(s); } catch(_){}
+  // Extract first {...} block (greedy)
+  const start = s.indexOf('{');
+  const end = s.lastIndexOf('}');
+  if (start>=0 && end>start){
+    try { return JSON.parse(s.slice(start,end+1)); } catch(_){}
+  }
+  return null;
+}
+
+function deleteCurrent(){
+  const q = currentQ(); if (!q) return;
+  if (!confirm(`Delete "${q.question.slice(0,60)}..."? Attempt history and cached audio will be removed.`)) return;
+  S.questions = S.questions.filter(x=>x.id!==q.id);
+  delete S.attempts[q.id];
+  idbDel(q.id);
+  S.currentQid = S.questions[0]?.id || null;
+  persist();
+  renderQuestionList();
+  if (S.currentQid) selectQuestion(S.currentQid);
+  else { $('practiceView').style.display='none'; $('emptyState').style.display='block'; }
+}
+
+function exportJSON(){
+  const data = { questions: S.questions };
+  const blob = new Blob([JSON.stringify(data,null,2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = 'questions.json'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+}
+
+function renderDrill(q){
+  const has = q.drill && (q.drill.repeat?.length || q.drill.tone?.length || q.drill.pauseMap || q.drill.powerPhrase);
+  $('drillSection').style.display = has ? '' : 'none';
+  if (!has) return;
+  $('drRepeat').innerHTML = (q.drill.repeat||[]).map(l=>`<li>${escapeHtml(l)}</li>`).join('');
+  $('drTone').innerHTML   = (q.drill.tone||[]).map(l=>`<li>${escapeHtml(l)}</li>`).join('');
+  $('drPause').textContent = q.drill.pauseMap || '';
+  $('drPower').textContent = q.drill.powerPhrase || '';
+}
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+
+// ----- Settings -----
+function openSettings(){
+  $('setEl').value = S.elKey;
+  $('setProvider').value = S.provider;
+  $('setProviderKey').value = S.providerKey;
+  $('setProviderModel').value = S.providerModel;
+  $('setProviderBase').value = S.providerBaseUrl;
+  $('setVoice').value = S.voiceId;
+  $('setWpm').value = S.targetWpm.join(','); $('setPvar').value = S.targetPvar; $('setPause').value = S.targetPause;
+  onProviderChange();
+  $('settingsModal').classList.add('show');
+}
+function closeSettings(){ $('settingsModal').classList.remove('show'); }
+function onProviderChange(){
+  const p = $('setProvider').value;
+  const def = PROVIDER_DEFAULTS[p] || {};
+  $('providerHelp').textContent = def.help || '';
+  $('setProviderModel').placeholder = 'auto: ' + (def.model || '');
+  const isCompat = p === 'openai-compatible';
+  $('setBaseUrlLabel').style.display = isCompat ? '' : 'none';
+  $('setProviderBase').style.display = isCompat ? '' : 'none';
+}
+function saveSettings(){
+  S.elKey = $('setEl').value.trim(); localStorage.setItem('st_el', S.elKey);
+  S.provider = $('setProvider').value; localStorage.setItem('st_provider', S.provider);
+  S.providerKey = $('setProviderKey').value.trim(); localStorage.setItem('st_pkey', S.providerKey);
+  S.providerModel = $('setProviderModel').value.trim(); localStorage.setItem('st_pmodel', S.providerModel);
+  S.providerBaseUrl = $('setProviderBase').value.trim(); localStorage.setItem('st_pbase', S.providerBaseUrl);
+  S.voiceId = $('setVoice').value.trim() || 'nPczCjzI2devNBz1zQrb'; localStorage.setItem('st_voice', S.voiceId);
+  const wpm = $('setWpm').value.split(',').map(s=>+s.trim()).filter(n=>!isNaN(n));
+  if (wpm.length===2) S.targetWpm = wpm; localStorage.setItem('st_wpm', JSON.stringify(S.targetWpm));
+  S.targetPvar = +$('setPvar').value || 12; localStorage.setItem('st_pvar', S.targetPvar);
+  S.targetPause = +$('setPause').value || 4; localStorage.setItem('st_pause', S.targetPause);
+  closeSettings();
+  if (S.currentQid) selectQuestion(S.currentQid);
+}
+
+// ----- Keyboard shortcuts -----
+window.addEventListener('keydown', e=>{
+  if (e.target.tagName==='INPUT' || e.target.tagName==='TEXTAREA') return;
+  if (e.code==='Space'){ e.preventDefault(); recording ? stopRec() : startRec(); }
+  else if (e.key==='r' || e.key==='R'){ const a=$('refAudio'); if(a.src){ a.currentTime=0; a.play(); } }
+  else if (e.key==='m' || e.key==='M'){ playMine(); }
+  else if (e.key==='n' || e.key==='N'){ if(!$('nextBtn').disabled) resetForNext(); }
+  else if (e.key==='a' || e.key==='A'){ openAsk(); }
+});
+
+// ----- Init -----
+renderQuestionList();
+if (S.currentQid && S.questions.find(q=>q.id===S.currentQid)) selectQuestion(S.currentQid);
+else if (S.questions.length) selectQuestion(S.questions[0].id);
+else $('emptyState').style.display='block';
+drawCanvas();
+if (!localStorage.getItem('st_welcomed')) setTimeout(showWelcome, 200);
+</script>
+</body>
+</html>
